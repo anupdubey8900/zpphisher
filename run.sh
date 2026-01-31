@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# --- 🛠️ FIX PHP PERMISSION ERROR (सबसे ज़रूरी लाइन) ---
+# Hum PHP ke liye ek local folder banayenge taki permission ka error na aaye
+mkdir -p .php_tmp
+chmod 777 .php_tmp
+export TMPDIR=$(pwd)/.php_tmp
+
 # --- 🎨 COLORS ---
 GOLD='\033[1;33m'
 CYAN='\033[1;36m'
@@ -8,12 +14,6 @@ GREY='\033[1;30m'
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 RESET='\033[0m'
-
-# --- 🛠️ FIX PERMISSION ERROR (MAGIC FIX) ---
-# Hum PHP ke liye ek local 'tmp' folder banayenge
-mkdir -p auth/tmp
-chmod 777 auth/tmp
-export TMPDIR=$(pwd)/auth/tmp
 
 # --- 🛡️ ICONS ---
 ICON_LOCK="🔒"
@@ -32,7 +32,6 @@ else
 fi
 
 # --- AUTO KILL OLD PROCESS ---
-# Purana server band karna jaruri hai
 pkill -f php > /dev/null 2>&1
 
 # --- CLEANUP TRAP ---
@@ -84,17 +83,17 @@ else
     exit 1
 fi
 
-# --- STARTING SERVER (WITH ERROR LOGGING) ---
+# --- STARTING SERVER (Fixed) ---
 echo -e " ${ICON_WIFI}  ${CYAN}Starting PHP Server...${RESET}"
 
-# Error log dekhne ke liye file me save karenge
+# PHP command me -t . ka matlab hai current folder ko root maano
 php -S $HOST:$PORT -t . > php_error.log 2>&1 &
 PID_PHP=$!
 sleep 3
 
-# Check if PHP is running
+# Check if Server is Alive
 if ! ps -p $PID_PHP > /dev/null; then
-    echo -e " ${RED}[!] Server Failed to Start! Check Error Below:${RESET}"
+    echo -e " ${RED}[!] Server Failed to Start! Error Log:${RESET}"
     echo -e "${GOLD}------------------------------------------------${RESET}"
     cat php_error.log
     echo -e "${GOLD}------------------------------------------------${RESET}"
